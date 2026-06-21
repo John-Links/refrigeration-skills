@@ -1,0 +1,4 @@
+# refrigeration-skills 依赖
+# Python 3.8+
+
+CoolProp>=7.0.0
