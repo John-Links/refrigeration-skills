@@ -1,0 +1,87 @@
+name: Tests
+
+# 触发条件：每次 push 或 PR 到 main 分支
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 任务：跑多个 Python 版本
+jobs:
+  test:
+    name: 测试制冷 Skills（${{ matrix.python-version }}）
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 升级 pip
+        run: python -m pip install --upgrade pip
+
+      - name: 安装依赖
+        run: |
+          # CoolProp 在 Linux 上装预编译 wheel
+          pip install CoolProp>=7.0.0
+          pip install -r requirements.txt
+
+      - name: 验证所有 Skills 可导入
+        run: |
+          python -c "
+          from skills import (
+              query_saturation_by_temperature,
+              query_saturation_by_pressure,
+              query_single_point,
+              generate_ph_curve,
+              generate_saturation_table,
+              convert,
+              query_state,
+              calc_pressure_drop,
+              generate_saturation_curve,
+              generate_isotherm,
+              generate_isobar,
+              generate_full_ts_chart,
+          )
+          print('✅ 所有 Skills 导入成功')
+          "
+
+      - name: 测试 S1 coolprop_query
+        run: python skills/coolprop_query.py
+
+      - name: 测试 S2 coolprop_ph
+        run: python skills/coolprop_ph.py
+
+      - name: 测试 S3 coolprop_sat_table
+        run: python skills/coolprop_sat_table.py
+
+      - name: 测试 S4 unit_converter
+        run: python skills/unit_converter.py
+
+      - name: 测试 S5 psychrometric
+        run: python skills/psychrometric.py
+
+      - name: 测试 S6 pipe_pressure_drop
+        run: python skills/pipe_pressure_drop.py
+
+      - name: 测试 S7 coolprop_t_s
+        run: python skills/coolprop_t_s.py
+
+      - name: 跑全测试总结
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ 所有测试通过"
+          else
+            echo "❌ 有测试失败"
+            exit 1
+          fi

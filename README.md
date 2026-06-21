@@ -3,6 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![CoolProp 7.0+](https://img.shields.io/badge/CoolProp-7.0+-green.svg)](http://www.coolprop.org/)
+[![Tests](https://github.com/John-Links/refrigeration-skills/actions/workflows/test.yml/badge.svg)](https://github.com/John-Links/refrigeration-skills/actions/workflows/test.yml)
+[![Skills](https://img.shields.io/badge/skills-7-blueviolet.svg)]()
+[![Open Source](https://img.shields.io/badge/开源-MIT-success.svg)]()
 
 > **制冷垂直 AI Agent Skills 集** — 让 ChatGPT / Claude / 任何 AI Agent 变制冷专家
 
