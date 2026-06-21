@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>制冷 Skills · 让 AI 变制冷专家</title>
+<meta name="description" content="一套开源制冷垂直 AI Agent Skills，让 ChatGPT、Claude 变成制冷专家。">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  color: #2c3e50;
+  background: #fafbfc;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 顶部导航 */
+nav {
+  background: #fff;
+  border-bottom: 1px solid #e1e4e8;
+  padding: 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav .logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #0366d6;
+}
+
+nav .links a {
+  color: #586069;
+  text-decoration: none;
+  margin-left: 24px;
+  font-size: 14px;
+}
+
+nav .links a:hover { color: #0366d6; }
+
+/* 主横幅 */
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.hero .subtitle {
+  font-size: 22px;
+  opacity: 0.95;
+  margin-bottom: 32px;
+}
+
+.hero .badges {
+  margin-bottom: 32px;
+}
+
+.hero .badges img {
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+.hero .cta {
+  display: inline-block;
+  background: white;
+  color: #667eea;
+  padding: 14px 36px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 8px;
+  font-size: 16px;
+  transition: transform 0.2s;
+}
+
+.hero .cta:hover { transform: translateY(-2px); }
+
+.hero .cta.secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+/* 内容区 */
+section {
+  padding: 64px 0;
+}
+
+section h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 48px;
+  color: #24292e;
+}
+
+/* Skills 网格 */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.skill-card {
+  background: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 24px;
+  transition: all 0.2s;
+}
+
+.skill-card:hover {
+  border-color: #0366d6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.skill-card .number {
+  display: inline-block;
+  background: #0366d6;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 32px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.skill-card h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #0366d6;
+}
+
+.skill-card .category {
+  display: inline-block;
+  background: #f1f8ff;
+  color: #0366d6;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.skill-card p {
+  color: #586069;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 用户群体 */
+.users {
+  background: white;
+}
+
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.user-card {
+  text-align: center;
+  padding: 24px;
+  border-radius: 8px;
+  background: #f6f8fa;
+}
+
+.user-card .icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.user-card h4 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.user-card p {
+  font-size: 13px;
+  color: #586069;
+}
+
+/* 使用步骤 */
+.steps {
+  background: #f6f8fa;
+}
+
+.step {
+  background: white;
+  border-left: 4px solid #0366d6;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.step h4 {
+  color: #0366d6;
+  margin-bottom: 8px;
+}
+
+.step code {
+  background: #f1f8ff;
+  color: #0366d6;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: "Consolas", monospace;
+  font-size: 13px;
+}
+
+/* CTA */
+.cta-section {
+  text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.cta-section h2 {
+  color: white;
+}
+
+.cta-section .cta {
+  display: inline-block;
+  background: white;
+  color: #667eea;
+  padding: 14px 36px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 8px;
+  font-size: 16px;
+}
+
+.cta-section .cta:hover {
+  background: #f6f8fa;
+}
+
+/* 页脚 */
+footer {
+  background: #24292e;
+  color: #8b949e;
+  text-align: center;
+  padding: 24px 0;
+  font-size: 14px;
+}
+
+footer a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+footer a:hover { text-decoration: underline; }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 32px; }
+  .hero .subtitle { font-size: 18px; }
+  section { padding: 40px 0; }
+  section h2 { font-size: 24px; }
+  nav .links a { margin-left: 12px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<nav>
+  <div class="container">
+    <div class="logo">🧊 refrigeration-skills</div>
+    <div class="links">
+      <a href="#skills">Skills</a>
+      <a href="#users">用户</a>
+      <a href="#start">开始</a>
+      <a href="https://github.com/John-Links/refrigeration-skills">GitHub →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 主横幅 -->
+<div class="hero">
+  <div class="container">
+    <h1>让 AI 变制冷专家 🧊</h1>
+    <p class="subtitle">7 个开源 Skills · 16 种制冷剂 · 即装即用</p>
+    <div class="badges">
+      <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
+      <img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python">
+      <img src="https://img.shields.io/badge/CoolProp-7.0+-green.svg" alt="CoolProp">
+      <img src="https://github.com/John-Links/refrigeration-skills/actions/workflows/test.yml/badge.svg" alt="Tests">
+      <img src="https://img.shields.io/badge/skills-7-blueviolet.svg" alt="Skills">
+    </div>
+    <div>
+      <a href="https://github.com/John-Links/refrigeration-skills" class="cta">⭐ Star on GitHub</a>
+      <a href="#start" class="cta secondary">快速开始</a>
+    </div>
+  </div>
+</div>
+
+<!-- Skills 清单 -->
+<section id="skills">
+  <div class="container">
+    <h2>🛠️ 7 个 Skills 一览</h2>
+    <div class="skills-grid">
+
+      <div class="skill-card">
+        <div class="number">1</div>
+        <span class="category">物性查询</span>
+        <h3>coolprop_query</h3>
+        <p>查任意制冷剂的饱和温度/饱和压力/任意工况物性。底层用 CoolProp 7.0+，NIST 标准。</p>
+      </div>
+
+      <div class="skill-card">
+        <div class="number">2</div>
+        <span class="category">图数据生成</span>
+        <h3>coolprop_ph</h3>
+        <p>一键生成 p-h 图（压焓图）所有数据点。饱和液线、饱和蒸汽线、过热区等压线全包。</p>
+      </div>
+
+      <div class="skill-card">
+        <div class="number">3</div>
+        <span class="category">表生成</span>
+        <h3>coolprop_sat_table</h3>
+        <p>生成完整饱和性质表（温度→压力、密度、焓、熵）。支持 ASCII 表格输出，方便贴报告。</p>
+      </div>
+
+      <div class="skill-card">
+        <div class="number">4</div>
+        <span class="category">单位换算</span>
+        <h3>unit_converter</h3>
+        <p>制冷常用单位换算 13 类：温度、压力、能量、功率、流量、管径、质量、长度等。</p>
+      </div>
+
+      <div class="skill-card">
+        <div class="number">5</div>
+        <span class="category">湿空气</span>
+        <h3>psychrometric</h3>
+        <p>焓湿图 6 参数互算：干球、湿球、露点、相对湿度、含湿量、焓值。HVAC 设计必备。</p>
+      </div>
+
+      <div class="skill-card">
+        <div class="number">6</div>
+        <span class="category">水力计算</span>
+        <h3>pipe_pressure_drop</h3>
+        <p>管道沿程压降 Darcy-Weisbach 计算。支持水、乙二醇溶液、雷诺数自动判定流型。</p>
+      </div>
+
+      <div class="skill-card">
+        <div class="number">7</div>
+        <span class="category">图数据生成</span>
+        <h3>coolprop_t_s</h3>
+        <p>一键生成 T-s 图（温熵图）所有数据点。饱和曲线、等温线、等压线全包，看效率。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 用户群体 -->
+<section id="users" class="users">
+  <div class="container">
+    <h2>👥 适合谁用？</h2>
+    <div class="users-grid">
+      <div class="user-card">
+        <div class="icon">🔧</div>
+        <h4>维修师傅</h4>
+        <p>现场查物性、换算单位、查焓湿图</p>
+      </div>
+      <div class="user-card">
+        <div class="icon">📐</div>
+        <h4>设计工程师</h4>
+        <p>选型、算工况、画 p-h 图、水力计算</p>
+      </div>
+      <div class="user-card">
+        <div class="icon">🎓</div>
+        <h4>学生</h4>
+        <p>学习、自学、做作业、做毕业设计</p>
+      </div>
+      <div class="user-card">
+        <div class="icon">🤖</div>
+        <h4>AI Agent</h4>
+        <p>作为 Skill 被 ChatGPT/Claude 调用</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 快速开始 -->
+<section id="start" class="steps">
+  <div class="container">
+    <h2>🚀 3 步上手</h2>
+
+    <div class="step">
+      <h4>第 1 步：克隆仓库</h4>
+      <code>git clone https://github.com/John-Links/refrigeration-skills.git</code>
+    </div>
+
+    <div class="step">
+      <h4>第 2 步：安装依赖</h4>
+      <code>pip install -r requirements.txt</code>
+    </div>
+
+    <div class="step">
+      <h4>第 3 步：开始使用</h4>
+      <code>
+        from skills import query_saturation_by_temperature<br>
+        result = query_saturation_by_temperature("R134a", 25, "C")<br>
+        print(result["saturation"]["P_sat_kpa"])  # 665.38 kPa
+      </code>
+    </div>
+
+    <div style="text-align: center; margin-top: 32px;">
+      <a href="https://github.com/John-Links/refrigeration-skills/blob/main/README.md" style="color: #0366d6;">查看完整文档 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- 行动号召 -->
+<section class="cta-section">
+  <div class="container">
+    <h2>🎯 我们的使命</h2>
+    <p style="font-size: 18px; max-width: 700px; margin: 0 auto 32px;">
+      让每一位制冷从业者都能用上 AI 助手。<br>
+      核心开源、增值闭源，Linux/红帽模式。
+    </p>
+    <a href="https://github.com/John-Links/refrigeration-skills" class="cta">⭐ Star 关注</a>
+    <a href="https://github.com/John-Links/refrigeration-skills/fork" class="cta">🍴 Fork 参与</a>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer>
+  <div class="container">
+    <p>
+      © 2026 强领制冷技术（上海）有限公司 ·
+      <a href="https://github.com/John-Links/refrigeration-skills">GitHub</a> ·
+      MIT License
+    </p>
+    <p style="margin-top: 8px; font-size: 12px;">
+      维护者：<a href="mailto:john.zhang@coolgil.com">john.zhang@coolgil.com</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
