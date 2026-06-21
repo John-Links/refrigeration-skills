@@ -10,7 +10,7 @@
 
 ## 这是什么
 
-老板我做了一套**制冷行业的 AI Skills**，让大模型（ChatGPT、Claude、国产模型）能**调用专业的制冷工具和数据**。
+一套**制冷行业的 AI Skills**，让大模型（ChatGPT、Claude、国产模型）能**调用专业的制冷工具和数据**。
 
 **现状**：
 - ChatGPT 答制冷问题 → 很浅
@@ -20,85 +20,92 @@
 **装上我们的 Skills 后**：
 - 查制冷剂物性 → 准确
 - 算制冷工况 → 专业
-- 故障诊断 → 基于老板 20+ 年经验
+- 算管道压降 → 靠谱
+- 单位换算 → 不出错
 
 ---
 
-## 第一个 Skill：coolprop-query
+## Skills 清单（v1.1.0）
 
-**已上线** ✅（v1.0.0）
+| # | Skill | 类别 | 状态 | 描述 |
+|---|---|---|---|---|
+| **S1** | `coolprop_query` | 物性查询 | ✅ v1.0 | 制冷剂物性查询（饱和/单点） |
+| **S2** | `coolprop_ph` | 图数据生成 | ✅ v1.1 | p-h 图完整数据点 |
+| **S3** | `coolprop_sat_table` | 表生成 | ✅ v1.1 | 完整饱和性质表 |
+| **S4** | `unit_converter` | 单位换算 | ✅ v1.1 | 制冷常用单位换算（13 类） |
+| **S5** | `psychrometric` | 湿空气 | ✅ v1.1 | 焓湿图 6 参数互算 |
+| **S6** | `pipe_pressure_drop` | 水力计算 | ✅ v1.1 | 管道沿程压降 |
 
-**能做什么**：
-- 查询 35+ 种制冷剂（R22/R134a/R410A/R717/R744...）的物性
-- 通过饱和温度/压力查物性（制冷设计最常用）
-- 单点查询（过热/过冷区的焓/熵）
+**全部 6 个 Skills = 🟢 完全开源（4 题打分法 0 分）**
 
-**示例**：
-```python
-from skills.coolprop_query import query_saturation_by_temperature
-result = query_saturation_by_temperature("R134a", 25, "C")
-print(result)
-# 输出：
-# {
-#   "saturation": {"P_sat_kpa": 665.38, "T_sat_c": 25},
-#   "saturated_liquid": {"h_kj_kg": 234.55, ...},
-#   "saturated_vapor": {"h_kj_kg": 412.33, ...},
-#   ...
-# }
+---
+
+## 快速开始
+
+### 安装
+
+```bash
+pip install -r requirements.txt
 ```
 
-**判断为完全开源（4 题打分法 0 分）**：
-- ✅ 没有老板 20 年经验，CoolProp 也能算
-- ✅ 不查 Technical Tools 软资料
-- ✅ 不需要综合判断
-- ✅ 不带老板个人 IP
+### 使用
+
+```python
+from skills import (
+    query_saturation_by_temperature,
+    generate_ph_curve,
+    generate_saturation_table,
+    convert,
+    query_state,
+    calc_pressure_drop,
+)
+
+# S1：制冷剂物性查询
+result = query_saturation_by_temperature("R134a", 25, "C")
+print(result["saturation"]["P_sat_kpa"])  # 665.38 kPa
+
+# S2：p-h 图数据生成
+ph = generate_ph_curve("R410A", pressure_range_kpa=(200, 4000))
+print(f"饱和液点数: {len(ph['saturation_liquid'])}")
+
+# S3：饱和性质表
+table = generate_saturation_table("R717", temp_range_c=(-30, 100), step_c=10)
+
+# S4：单位换算
+print(convert("100", "°C", "°F"))    # 212.0
+print(convert("1", "MPa", "psi"))    # 145.04
+
+# S5：焓湿图
+state = query_state(T_db_c=25, RH=0.5)
+print(state["T_dp_c"])  # 13.9
+
+# S6：管道压降
+dp = calc_pressure_drop(pipe_dn_mm=50, length_m=100,
+                        fluid="water", velocity_m_s=2.0)
+print(dp["pressure_drop_kpa"])  # ~25.7
+```
 
 ---
 
-## 为什么开源
+## 应用场景
 
-**老板的逻辑**：
-- 开源 = 免费 = 有人用 = 品牌曝光 = 引流到平台 = 变现
-
-**对开发者的好处**：
-- 免费用专业制冷工具
-- 不用自己写代码
-- 可以集成到自己的项目
-
-**对企业的好处**：
-- 免费试用
-- 后续可付费定制
+| 用户 | 用什么 | 解决什么问题 |
+|---|---|---|
+| **维修师傅** | S1/S4/S5 | 现场查物性、换单位、查焓湿图 |
+| **设计工程师** | S1/S2/S3/S6 | 选型、算工况、画 p-h 图、水力计算 |
+| **学生** | 全部 | 学习、自学、做作业 |
+| **AI Agent** | 全部 | 调用工具回答制冷问题 |
 
 ---
 
 ## Roadmap
 
-| Skill | 状态 | 类别 |
+| Skill | 类别 | 状态 |
 |---|---|---|
-| **S1 coolprop-query** | ✅ v1.0.0 | 完全开源 |
-| **S2 coolprop-p-h** | 🚧 下一步 | 基础开源 + 增值 |
-| **S3 psychrometric** | 📋 计划 | 基础开源 |
-| **S4 pipe-sizing** | 📋 计划 | 完全开源 |
-| **S8 refrigerant-selector** | 📋 计划 | 完全增值（老板经验）|
-| **S9 compressor-selector** | 📋 计划 | 完全增值 |
-| **S10 fault-diagnosis** | 📋 计划 | 完全增值 |
-
----
-
-## 安装
-
-```bash
-# 1. 安装依赖
-pip install -r requirements.txt
-
-# 2. 使用
-from skills.coolprop_query import query_saturation_by_temperature
-result = query_saturation_by_temperature("R134a", 25, "C")
-```
-
-**依赖**：
-- CoolProp 7.0+
-- Python 3.8+
+| **S7** `coolprop_t-s` | T-s 图数据 | 📋 计划 |
+| **S8** `refrigerant-selector` | 制冷剂选择（增值） | 📋 计划（要老板经验）|
+| **S9** `compressor-selector` | 压缩机选型（增值） | 📋 计划（要老板经验）|
+| **S10** `fault-diagnosis` | 故障诊断（增值） | 📋 计划（要老板经验）|
 
 ---
 
@@ -110,6 +117,7 @@ result = query_saturation_by_temperature("R134a", 25, "C")
 - 加新制冷剂
 - 优化算法
 - 加新功能
+- 提 Issue / PR
 
 **联系**：
 - 项目维护：强领制冷技术（上海）有限公司
