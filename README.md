@@ -25,7 +25,7 @@
 
 ---
 
-## Skills 清单（v1.1.0）
+## Skills 清单（v1.2.0）
 
 | # | Skill | 类别 | 状态 | 描述 |
 |---|---|---|---|---|
@@ -35,8 +35,9 @@
 | **S4** | `unit_converter` | 单位换算 | ✅ v1.1 | 制冷常用单位换算（13 类） |
 | **S5** | `psychrometric` | 湿空气 | ✅ v1.1 | 焓湿图 6 参数互算 |
 | **S6** | `pipe_pressure_drop` | 水力计算 | ✅ v1.1 | 管道沿程压降 |
+| **S7** | `coolprop_t_s` | 图数据生成 | ✅ v1.2 | T-s 图完整数据（饱和 + 等温 + 等压） |
 
-**全部 6 个 Skills = 🟢 完全开源（4 题打分法 0 分）**
+**7 个 Skills = 🟢 完全开源（4 题打分法 0 分）**
 
 ---
 
@@ -58,6 +59,7 @@ from skills import (
     convert,
     query_state,
     calc_pressure_drop,
+    generate_full_ts_chart,  # S7
 )
 
 # S1：制冷剂物性查询
@@ -102,10 +104,9 @@ print(dp["pressure_drop_kpa"])  # ~25.7
 
 | Skill | 类别 | 状态 |
 |---|---|---|
-| **S7** `coolprop_t-s` | T-s 图数据 | 📋 计划 |
-| **S8** `refrigerant-selector` | 制冷剂选择（增值） | 📋 计划（要老板经验）|
-| **S9** `compressor-selector` | 压缩机选型（增值） | 📋 计划（要老板经验）|
-| **S10** `fault-diagnosis` | 故障诊断（增值） | 📋 计划（要老板经验）|
+| **S8** `refrigerant-selector` | 制冷剂选择（增值） | 📋 提炼中（要老板经验）|
+| **S9** `compressor-selector` | 压缩机选型（增值） | 📋 提炼中（要老板经验）|
+| **S10** `fault-diagnosis` | 故障诊断（增值） | 📋 提炼中（要老板经验）|
 
 ---
 
